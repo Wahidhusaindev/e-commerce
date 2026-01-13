@@ -30,6 +30,55 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+// Async thunk for registration
+export const registerUser = createAsyncThunk(
+  "auth/registerUser",
+  async (userData, { rejectWithValue }) => {
+    try {
+      // Register user
+      const registerResponse = await fetch("https://fakestoreapi.com/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (!registerResponse.ok) {
+        throw new Error("Registration failed");
+      }
+
+      const newUser = await registerResponse.json();
+
+      // Automatically login after successful registration
+      const loginResponse = await fetch("https://fakestoreapi.com/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: userData.username,
+          password: userData.password,
+        }),
+      });
+
+      if (!loginResponse.ok) {
+        throw new Error("Registration successful but auto-login failed. Please login manually.");
+      }
+
+      const loginData = await loginResponse.json();
+
+      // Store token in localStorage
+      localStorage.setItem("token", loginData.token);
+      localStorage.setItem("user", JSON.stringify({ username: userData.username }));
+
+      return { username: userData.username, token: loginData.token };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 // Async thunk for logout
 export const logoutUser = createAsyncThunk(
   "auth/logoutUser",
@@ -51,13 +100,23 @@ const getInitialAuthState = () => {
   const user = localStorage.getItem("user");
 
   if (token && user) {
-    return {
-      isAuthenticated: true,
-      user: JSON.parse(user),
-      token: token,
-      loading: false,
-      error: null,
-    };
+    try {
+      const parsedUser = JSON.parse(user);
+      // Basic token validation - check if token exists and is not empty
+      if (token.trim() && parsedUser.username) {
+        return {
+          isAuthenticated: true,
+          user: parsedUser,
+          token: token,
+          loading: false,
+          error: null,
+        };
+      }
+    } catch (error) {
+      // If parsing fails, clear invalid data
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+    }
   }
 
   return {
@@ -95,6 +154,25 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.isAuthenticated = false;
+        state.user = null;
+        state.token = null;
+        state.error = action.payload;
+      })
+      // Register cases
+      .addCase(registerUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isAuthenticated = true;
+        state.user = action.payload;
+        state.token = action.payload.token;
+        state.error = null;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
         state.isAuthenticated = false;
         state.user = null;

@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { registerUser, clearError } from '../redux/slices/authSlice'
 import { FiEye, FiEyeOff } from 'react-icons/fi'
 
 const Register = () => {
@@ -14,7 +16,20 @@ const Register = () => {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
+  const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { loading: authLoading, error: authError, isAuthenticated } = useSelector(state => state.auth)
+
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/')
+    }
+  }, [isAuthenticated, navigate])
+
+  React.useEffect(() => {
+    // Clear any previous errors when component mounts
+    dispatch(clearError())
+  }, [dispatch])
 
   const handleChange = (e) => {
     setFormData({
@@ -27,6 +42,19 @@ const Register = () => {
     e.preventDefault()
     setError('')
 
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(formData.email)) {
+      setError('Please enter a valid email address')
+      return
+    }
+
+    // Username validation
+    if (formData.username.length < 3) {
+      setError('Username must be at least 3 characters long')
+      return
+    }
+
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match')
       return
@@ -37,33 +65,11 @@ const Register = () => {
       return
     }
 
-    setLoading(true)
-
-    try {
-      // Simulate registration - replace with actual API call
-      const response = await fetch('https://fakestoreapi.com/users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          username: formData.username,
-          password: formData.password,
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error('Registration failed')
-      }
-
-      // Registration successful, redirect to login
-      navigate('/login')
-    } catch (error) {
-      setError('Registration failed. Please try again.')
-    } finally {
-      setLoading(false)
-    }
+    dispatch(registerUser({
+      email: formData.email,
+      username: formData.username,
+      password: formData.password,
+    }))
   }
 
   return (
@@ -79,6 +85,11 @@ const Register = () => {
               sign in to existing account
             </Link>
           </p>
+          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-md">
+            <p className="text-sm text-blue-700">
+              <strong>Note:</strong> After registration, you'll be automatically logged in. For testing, you can use any valid email format and a unique username.
+            </p>
+          </div>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
@@ -166,19 +177,19 @@ const Register = () => {
             </div>
           </div>
 
-          {error && (
+          {authError && (
             <div className="rounded-md bg-red-50 p-4">
-              <div className="text-sm text-red-700">{error}</div>
+              <div className="text-sm text-red-700">{authError}</div>
             </div>
           )}
 
           <div>
             <button
               type="submit"
-              disabled={loading}
+              disabled={authLoading}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Creating account...' : 'Create account'}
+              {authLoading ? 'Creating account...' : 'Create account'}
             </button>
           </div>
         </form>
