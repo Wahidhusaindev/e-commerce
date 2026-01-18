@@ -6,6 +6,7 @@ import { addToWishlist } from '../redux/slices/wishlistSlice'
 import { Link } from 'react-router-dom'
 import { FiHeart, FiShoppingCart, FiStar, FiTrendingUp } from 'react-icons/fi'
 import Carousel from '../Components/Carousel.jsx'
+import FAQ from './FAQ.jsx'
 
 const Dashboard = () => {
   const dispatch = useDispatch()
@@ -157,12 +158,12 @@ const Dashboard = () => {
               items={featuredProducts}
               autoPlay={false}
               renderItem={(product) => (
-                <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden mx-3 border border-gray-100 transition-all duration-500 hover:-translate-y-2 group">
+                <div className=" bg-gray-200 rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden mx-3 border border-gray-300 transition-all duration-500 hover:-translate-y-2 group">
                   <Link to={`/product/${product.id}`} className="block relative overflow-hidden group">
                     <div className="relative overflow-hidden">
                       <img src={product.image} alt={product.title} className="w-full h-56 object-contain p-6 group-hover:scale-110 transition-transform duration-500" />
                       {/* Black screen overlay */}
-                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center">
+                      <div className="absolute inset-0  bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center">
                         <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0">
                           <span className="bg-white text-gray-900 px-3 py-1 rounded-full text-xs font-medium shadow-lg">
                             View Details
@@ -207,7 +208,7 @@ const Dashboard = () => {
       )}
 
       {/* All Products Grid */}
-      <section className="py-16 px-4 bg-linear-to-br from-gray-50 to-white">
+      <section className="py-16 px-4 bg-linear-to-br from-gray-300 to-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold bg-linear-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-4">
@@ -217,14 +218,14 @@ const Dashboard = () => {
               Explore our full range of high-quality products, carefully curated for your needs
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {products.map(product => (
-              <div key={product.id} className="bg-white rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden border border-gray-100 transition-all duration-500 hover:-translate-y-3 group">
+              <div key={product.id} className="bg-gray-100 rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden border border-gray-400 transition-all duration-500 hover:-translate-y-3 group">
                 <Link to={`/product/${product.id}`} className="block relative overflow-hidden">
                   <div className="relative overflow-hidden">
                     <img src={product.image} alt={product.title} className="w-full h-56 object-contain p-6 group-hover:scale-110 transition-transform duration-500" />
                     {/* Black screen overlay */}
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center">
+                    <div className="absolute inset-0 bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center">
                       <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0">
                         <span className="bg-white text-gray-900 px-4 py-2 rounded-full text-sm font-medium shadow-lg">
                           View Details
@@ -288,6 +289,7 @@ const Dashboard = () => {
           </div>
         </div>
       </section>
+<FAQ/>
     </div>
   )
 }

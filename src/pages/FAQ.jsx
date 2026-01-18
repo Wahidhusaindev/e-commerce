@@ -226,7 +226,7 @@ const FAQ = () => {
         </div>
 
         {/* Quick Links */}
-        <div className="bg-white rounded-lg shadow-md p-8">
+        {/* <div className="bg-white rounded-lg shadow-md p-8">
           <h2 className="text-2xl font-bold text-center mb-8">Quick Links</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <Link
@@ -254,7 +254,7 @@ const FAQ = () => {
               <span className="text-indigo-600 font-medium">My Account</span>
             </Link>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   )
