@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import  { useState, useEffect } from 'react'
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 
 const Carousel = ({ items, renderItem, autoPlay = true, autoPlayInterval = 5000 }) => {

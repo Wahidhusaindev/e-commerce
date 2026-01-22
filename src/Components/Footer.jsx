@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { href, Link } from 'react-router-dom'
 import {
   FiFacebook,
   FiTwitter,
@@ -19,24 +19,22 @@ const Footer = () => {
   const footerLinks = {
     shop: [
       { name: 'All Products', href: '/' },
-      { name: 'Categories', href: '/' },
+      { name: 'Mens Cloths', href: '/mens-clothing' },
+      {name: 'Womens Cloths', href: '/womens-clothing'},
       { name: 'New Arrivals', href: '/' },
       { name: 'Best Sellers', href: '/' },
-      { name: 'Sale', href: '/' }
     ],
     support: [
-      { name: 'Contact Us', href: '/faq' },
+      { name: 'Contact Us', href: '/contact' }, 
       { name: 'FAQ', href: '/faq' },
       { name: 'Shipping Info', href: '/faq' },
       { name: 'Returns', href: '/faq' },
       { name: 'Size Guide', href: '/faq' }
     ],
     company: [
-      { name: 'About Us', href: '/' },
+      { name: 'About Us', href: '/about' },
       { name: 'Careers', href: '/' },
-      { name: 'Press', href: '/' },
       { name: 'Blog', href: '/' },
-      { name: 'Sustainability', href: '/' }
     ],
     legal: [
       { name: 'Privacy Policy', href: '/' },
@@ -173,27 +171,6 @@ const Footer = () => {
                 </li>
               ))}
             </ul>
-          </div>
-
-          {/* Newsletter Signup */}
-          <div className="sm:col-span-2 xl:col-span-1">
-            <h3 className="text-sm lg:text-lg font-semibold mb-3 lg:mb-4 text-white">Stay Updated</h3>
-            <p className="text-gray-400 text-xs lg:text-sm mb-3 lg:mb-4">
-              Subscribe to our newsletter for exclusive deals and updates.
-            </p>
-            <form className="space-y-2 lg:space-y-3">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-xs lg:text-sm"
-              />
-              <button
-                type="submit"
-                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md transition-colors duration-200 text-xs lg:text-sm font-medium"
-              >
-                Subscribe
-              </button>
-            </form>
           </div>
         </div>
       </div>

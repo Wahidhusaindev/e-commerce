@@ -19,7 +19,7 @@ const Navbar = () => {
 
   const dispatch = useDispatch();
   const cartCount = useSelector((state) =>
-    state.cart.items.reduce((total, item) => total + item.quantity, 0)
+    state.cart.items.reduce((total, item) => total + item.quantity, 0),
   );
   const wishlistCount = useSelector((state) => state.wishlist.items.length);
   const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -56,10 +56,6 @@ const Navbar = () => {
             <Link to="/womens-clothing">Women</Link>
             <Link to="/about">About Us</Link>
             <Link to="/contact">Contact Us</Link>
-            {/* <Link to="/faq" className="text-gray-700 hover:text-indigo-600 transition-colors duration-200 flex items-center gap-2 font-medium">
-              <FiHelpCircle className="w-4 h-4" />
-              FAQ
-            </Link> */}
           </div>
 
           {/* Right Side Actions */}
@@ -151,7 +147,7 @@ const Navbar = () => {
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden border-t border-gray-200 bg-white">
-            <div className="px-2 pt-2 pb-3 space-y-1">
+            <div className="px-2 pt-2 pb-3 space-y-3">
               <Link
                 to="/"
                 className="block px-3 py-2 text-gray-700 hover:text-indigo-600 hover:bg-gray-50 rounded-lg transition-colors duration-200 font-medium"
@@ -163,15 +159,6 @@ const Navbar = () => {
               <Link to="/womens-clothing">Women</Link>
               <Link to="/about">About Us</Link>
               <Link to="/contact">Contact Us</Link>
-
-              {/* <Link
-                to="/faq"
-                className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:text-indigo-600 hover:bg-gray-50 rounded-lg transition-colors duration-200 font-medium"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <FiHelpCircle className="w-4 h-4" />
-                FAQ
-              </Link> */}
 
               {/* Mobile Auth Section */}
               <div className="border-t border-gray-200 pt-3 mt-3">
