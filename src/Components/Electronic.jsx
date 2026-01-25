@@ -6,12 +6,11 @@ import { addToWishlist } from "../redux/slices/wishlistSlice";
 import { Link } from "react-router-dom";
 import { FiHeart, FiShoppingCart, FiStar } from "react-icons/fi";
 
-const Mens = () => {
+const Electronic = () => {
   const dispatch = useDispatch();
   const { data: products, status } = useSelector((state) => state.products);
   const cartItems = useSelector((state) => state.cart.items);
   const wishlistItems = useSelector((state) => state.wishlist.items);
-
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchProducts());
@@ -29,20 +28,18 @@ const Mens = () => {
   const isInCart = (id) => cartItems.some((item) => item.id === id);
   const isInWishlist = (id) => wishlistItems.some((item) => item.id === id);
 
-  // Filter men's clothing
-  const mensProducts = useMemo(
-    () => products.filter((p) => p.category === "men's clothing"),
-    [products]
-  )
-
+  const electronicProducts = useMemo(
+   () => products.filter((p)=>p.category==="electronics"),
+   [products],
+  );
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
+     <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
       {/* Header */}
       <div className="bg-indigo-600 text-white py-12 px-4">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-4xl font-bold mb-2">Men's Collection</h1>
+          <h1 className="text-4xl font-bold mb-2">Electronic Items</h1>
           <p className="text-indigo-100 text-lg">
-            Discover our premium selection of men's clothing and accessories
+            Discover our premium selection of Electronic Items and accessories
           </p>
         </div>
       </div>
@@ -55,9 +52,9 @@ const Mens = () => {
           </div>
         )}
 
-        {status === "success" && mensProducts.length > 0 && (
+        {status === "success" && electronicProducts.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {mensProducts.map((product) => (
+            {electronicProducts.map((product) => (
               <div
                 key={product.id}
                 className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden group"
@@ -134,9 +131,9 @@ const Mens = () => {
           </div>
         )}
 
-        {status === "success" && mensProducts.length === 0 && (
+        {status === "success" && electronicProducts.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">No men's products available</p>
+            <p className="text-gray-500 text-lg">No Electronic products available</p>
           </div>
         )}
       </div>
@@ -144,4 +141,4 @@ const Mens = () => {
   );
 };
 
-export default Mens;
+export default Electronic;

@@ -102,7 +102,8 @@ const OrderSuccess = () => {
             <div className="space-y-4">
               {lastOrder.items.map(item => (
                 <div key={item.id} className="flex items-center gap-4 py-2">
-                  <img src={item.image} alt={item.title} className="w-16 h-16 object-contain rounded-md" />
+                  <img 
+                  src={item.image} alt={item.title} className="w-16 h-16 object-contain rounded-md" />
                   <div className="flex-1">
                     <h4 className="font-medium text-gray-900">{item.title}</h4>
                     <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>

@@ -66,7 +66,7 @@ const Dashboard = () => {
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-br from-gray-50 via-white to-gray-100 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-indigo-600 mx-auto mb-4"></div>
           <p className="text-gray-600 text-lg">Loading amazing products...</p>
@@ -77,7 +77,7 @@ const Dashboard = () => {
 
   if (status === 'failed') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-br from-gray-50 via-white to-gray-100 flex items-center justify-center">
         <div className="text-center max-w-md mx-auto px-4">
           <div className="bg-red-50 border border-red-200 rounded-2xl p-8 mb-6">
             <div className="text-red-600 text-6xl mb-4">⚠️</div>
@@ -161,7 +161,10 @@ const Dashboard = () => {
                 <div className=" bg-gray-200 rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden mx-3 border border-gray-300 transition-all duration-500 hover:-translate-y-2 group">
                   <Link to={`/product/${product.id}`} className="block relative overflow-hidden group">
                     <div className="relative overflow-hidden">
-                      <img src={product.image} alt={product.title} className="w-full h-56 object-contain p-6 group-hover:scale-110 transition-transform duration-500" />
+                      <img 
+                       loading="eager"
+  fetchpriority="high"
+                      src={product.image} alt={product.title} className="w-full h-56 object-contain p-6 group-hover:scale-110 transition-transform duration-500" />
                       {/* Black screen overlay */}
                       <div className="absolute inset-0  bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center">
                         <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0">
@@ -193,7 +196,7 @@ const Dashboard = () => {
                       className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-300 ${
                         isInCart(product.id)
                           ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                          : 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 hover:shadow-lg transform hover:scale-105'
+                          : 'bg-linear-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 hover:shadow-lg transform hover:scale-105'
                       }`}
                     >
                       <FiShoppingCart className="w-5 h-5" />
@@ -223,7 +226,8 @@ const Dashboard = () => {
               <div key={product.id} className="bg-gray-100 rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden border border-gray-400 transition-all duration-500 hover:-translate-y-3 group">
                 <Link to={`/product/${product.id}`} className="block relative overflow-hidden">
                   <div className="relative overflow-hidden">
-                    <img src={product.image} alt={product.title} className="w-full h-56 object-contain p-6 group-hover:scale-110 transition-transform duration-500" />
+                    <img
+                     src={product.image} alt={product.title} className="w-full h-56 object-contain p-6 group-hover:scale-110 transition-transform duration-500" />
                     {/* Black screen overlay */}
                     <div className="absolute inset-0 bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center">
                       <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0">

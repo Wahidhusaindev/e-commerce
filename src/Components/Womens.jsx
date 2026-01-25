@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchProducts } from '../redux/slices/productSlice'
 import { addToCart } from '../redux/slices/cartSlice'
@@ -30,12 +30,12 @@ const Womens = () => {
   const isInWishlist = (id) => wishlistItems.some(item => item.id === id)
 
   // Filter women's clothing
-  const womensProducts = products.filter(product => 
-    product.category === "women's clothing" || product.category === "jewelery"
+  const womensProducts = useMemo(
+    () => products.filter((p) => p.category === "women's clothing"),
+    [products]
   )
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
       {/* Header */}
       <div className="bg-pink-600 text-white py-12 px-4">
         <div className="max-w-7xl mx-auto">

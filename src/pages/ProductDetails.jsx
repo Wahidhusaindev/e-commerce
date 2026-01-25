@@ -98,7 +98,7 @@ const ProductDetails = () => {
   if (!product) return null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
+    <div className="min-h-screen bg-linear-to-br from-gray-50 via-white to-gray-100">
       <div className="max-w-7xl mx-auto px-4 py-8">
         <Link
           to="/"
@@ -206,6 +206,8 @@ const ProductDetails = () => {
                   className="bg-white p-4 rounded-xl shadow hover:shadow-xl transition"
                 >
                   <img
+                   loading="eager"
+  fetchpriority="high"
                     src={item.image}
                     alt={item.title}
                     className="h-40 mx-auto object-contain mb-4"

@@ -79,7 +79,8 @@ const OrderHistory = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
                 {order.items.slice(0, 3).map(item => (
                   <div key={item.id} className="flex items-center gap-3">
-                    <img src={item.image} alt={item.title} className="w-12 h-12 object-contain rounded-md" />
+                    <img 
+                     src={item.image} alt={item.title} className="w-12 h-12 object-contain rounded-md" />
                     <div className="flex-1 min-w-0">
                       <h4 className="text-sm font-medium text-gray-900 truncate">{item.title}</h4>
                       <p className="text-sm text-gray-600">Qty: {item.quantity}</p>

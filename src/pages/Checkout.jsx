@@ -1,125 +1,135 @@
-import React, { useState, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import { processOrderPayment, setCurrentOrder, clearPaymentError } from '../redux/slices/paymentSlice'
-import { removeFromCart } from '../redux/slices/cartSlice'
-import { FiCreditCard, FiTruck, FiShield, FiCheck } from 'react-icons/fi'
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {
+  processOrderPayment,
+  setCurrentOrder,
+  clearPaymentError,
+} from "../redux/slices/paymentSlice";
+import { removeFromCart } from "../redux/slices/cartSlice";
+import { FiCreditCard, FiTruck, FiShield, FiCheck } from "react-icons/fi";
 
 const Checkout = () => {
-  const [step, setStep] = useState(1) // 1: Shipping, 2: Payment, 3: Review
+  const [step, setStep] = useState(1); // 1: Shipping, 2: Payment, 3: Review
   const [shippingInfo, setShippingInfo] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    address: '',
-    city: '',
-    zipCode: '',
-    country: 'US'
-  })
+    firstName: "",
+    lastName: "",
+    email: "",
+    address: "",
+    city: "",
+    zipCode: "",
+    country: "US",
+  });
   const [paymentInfo, setPaymentInfo] = useState({
-    cardNumber: '',
-    expiryDate: '',
-    cvv: '',
-    cardholderName: ''
-  })
-  const [billingSameAsShipping, setBillingSameAsShipping] = useState(true)
+    cardNumber: "",
+    expiryDate: "",
+    cvv: "",
+    cardholderName: "",
+  });
+  const [billingSameAsShipping, setBillingSameAsShipping] = useState(true);
 
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const cartItems = useSelector(state => state.cart.items)
-  const { loading, error, lastOrder } = useSelector(state => state.payment)
-  const { isAuthenticated, user } = useSelector(state => state.auth)
+  const cartItems = useSelector((state) => state.cart.items);
+  const { loading, error, lastOrder } = useSelector((state) => state.payment);
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
 
   // Redirect if not authenticated
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate('/login')
+      navigate("/login");
     }
-  }, [isAuthenticated, navigate])
+  }, [isAuthenticated, navigate]);
 
   // Redirect if cart is empty
   useEffect(() => {
     if (cartItems.length === 0 && !lastOrder) {
-      navigate('/cart')
+      navigate("/cart");
     }
-  }, [cartItems, lastOrder, navigate])
+  }, [cartItems, lastOrder, navigate]);
 
   // Pre-fill shipping info with user data
   useEffect(() => {
     if (user) {
-      setShippingInfo(prev => ({
+      setShippingInfo((prev) => ({
         ...prev,
-        email: user.username + '@example.com' // Mock email
-      }))
+        email: user.username + "@example.com", // Mock email
+      }));
     }
-  }, [user])
+  }, [user]);
 
-  const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0)
-  const shipping = subtotal > 50 ? 0 : 5.99
-  const tax = subtotal * 0.08
-  const total = subtotal + shipping + tax
+  const subtotal = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0,
+  );
+  const shipping = subtotal > 50 ? 0 : 5.99;
+  const tax = subtotal * 0.08;
+  const total = subtotal + shipping + tax;
 
   const handleShippingSubmit = (e) => {
-    e.preventDefault()
-    setStep(2)
-  }
+    e.preventDefault();
+    setStep(2);
+  };
 
   const handlePaymentSubmit = (e) => {
-    e.preventDefault()
-    setStep(3)
-  }
+    e.preventDefault();
+    setStep(3);
+  };
 
   const handleFinalSubmit = async () => {
     const orderData = {
       items: cartItems,
       shippingInfo,
-      paymentInfo: { ...paymentInfo, cardNumber: '**** **** **** ' + paymentInfo.cardNumber.slice(-4) },
+      paymentInfo: {
+        ...paymentInfo,
+        cardNumber: "**** **** **** " + paymentInfo.cardNumber.slice(-4),
+      },
       subtotal,
       shipping,
       tax,
       total,
       userId: user?.username,
-      orderDate: new Date().toISOString()
-    }
+      orderDate: new Date().toISOString(),
+    };
 
-    dispatch(setCurrentOrder(orderData))
-    const result = await dispatch(processOrderPayment(paymentInfo))
+    dispatch(setCurrentOrder(orderData));
+    const result = await dispatch(processOrderPayment(paymentInfo));
 
-    if (result.meta.requestStatus === 'fulfilled') {
+    if (result.meta.requestStatus === "fulfilled") {
       // Clear cart after successful payment
-      cartItems.forEach(item => {
-        dispatch(removeFromCart(item.id))
-      })
-      navigate('/order-success')
+      cartItems.forEach((item) => {
+        dispatch(removeFromCart(item.id));
+      });
+      navigate("/order-success");
     }
-  }
+  };
 
   const formatCardNumber = (value) => {
-    const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '')
-    const matches = v.match(/\d{4,16}/g)
-    const match = matches && matches[0] || ''
-    const parts = []
+    const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
+    const matches = v.match(/\d{4,16}/g);
+    const match = (matches && matches[0]) || "";
+    const parts = [];
     for (let i = 0, len = match.length; i < len; i += 4) {
-      parts.push(match.substring(i, i + 4))
+      parts.push(match.substring(i, i + 4));
     }
     if (parts.length) {
-      return parts.join(' ')
+      return parts.join(" ");
     } else {
-      return v
+      return v;
     }
-  }
+  };
 
   const formatExpiryDate = (value) => {
-    const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '')
+    const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
     if (v.length >= 2) {
-      return v.substring(0, 2) + '/' + v.substring(2, 4)
+      return v.substring(0, 2) + "/" + v.substring(2, 4);
     }
-    return v
-  }
+    return v;
+  };
 
   if (cartItems.length === 0) {
-    return null // Will redirect
+    return null; // Will redirect
   }
 
   return (
@@ -127,17 +137,27 @@ const Checkout = () => {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-center mb-2">Checkout</h1>
         <div className="flex justify-center items-center space-x-4">
-          <div className={`flex items-center ${step >= 1 ? 'text-indigo-600' : 'text-gray-400'}`}>
+          <div
+            className={`flex items-center ${step >= 1 ? "text-indigo-600" : "text-gray-400"}`}
+          >
             <FiTruck className="mr-2" />
             <span className="text-sm font-medium">Shipping</span>
           </div>
-          <div className={`w-8 h-px ${step >= 2 ? 'bg-indigo-600' : 'bg-gray-300'}`} />
-          <div className={`flex items-center ${step >= 2 ? 'text-indigo-600' : 'text-gray-400'}`}>
+          <div
+            className={`w-8 h-px ${step >= 2 ? "bg-indigo-600" : "bg-gray-300"}`}
+          />
+          <div
+            className={`flex items-center ${step >= 2 ? "text-indigo-600" : "text-gray-400"}`}
+          >
             <FiCreditCard className="mr-2" />
             <span className="text-sm font-medium">Payment</span>
           </div>
-          <div className={`w-8 h-px ${step >= 3 ? 'bg-indigo-600' : 'bg-gray-300'}`} />
-          <div className={`flex items-center ${step >= 3 ? 'text-indigo-600' : 'text-gray-400'}`}>
+          <div
+            className={`w-8 h-px ${step >= 3 ? "bg-indigo-600" : "bg-gray-300"}`}
+          />
+          <div
+            className={`flex items-center ${step >= 3 ? "text-indigo-600" : "text-gray-400"}`}
+          >
             <FiCheck className="mr-2" />
             <span className="text-sm font-medium">Review</span>
           </div>
@@ -147,77 +167,125 @@ const Checkout = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="space-y-6">
           {step === 1 && (
-            <form onSubmit={handleShippingSubmit} className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Shipping Information</h2>
+            <form
+              onSubmit={handleShippingSubmit}
+              className="bg-white rounded-lg shadow-md p-6"
+            >
+              <h2 className="text-xl font-semibold mb-4">
+                Shipping Information
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    First Name
+                  </label>
                   <input
                     type="text"
                     required
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     value={shippingInfo.firstName}
-                    onChange={(e) => setShippingInfo({...shippingInfo, firstName: e.target.value})}
+                    onChange={(e) =>
+                      setShippingInfo({
+                        ...shippingInfo,
+                        firstName: e.target.value,
+                      })
+                    }
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Last Name
+                  </label>
                   <input
                     type="text"
                     required
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     value={shippingInfo.lastName}
-                    onChange={(e) => setShippingInfo({...shippingInfo, lastName: e.target.value})}
+                    onChange={(e) =>
+                      setShippingInfo({
+                        ...shippingInfo,
+                        lastName: e.target.value,
+                      })
+                    }
                   />
                 </div>
               </div>
               <div className="mt-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email
+                </label>
                 <input
                   type="email"
                   required
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   value={shippingInfo.email}
-                  onChange={(e) => setShippingInfo({...shippingInfo, email: e.target.value})}
+                  onChange={(e) =>
+                    setShippingInfo({ ...shippingInfo, email: e.target.value })
+                  }
                 />
               </div>
               <div className="mt-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Address
+                </label>
                 <input
                   type="text"
                   required
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   value={shippingInfo.address}
-                  onChange={(e) => setShippingInfo({...shippingInfo, address: e.target.value})}
+                  onChange={(e) =>
+                    setShippingInfo({
+                      ...shippingInfo,
+                      address: e.target.value,
+                    })
+                  }
                 />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    City
+                  </label>
                   <input
                     type="text"
                     required
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     value={shippingInfo.city}
-                    onChange={(e) => setShippingInfo({...shippingInfo, city: e.target.value})}
+                    onChange={(e) =>
+                      setShippingInfo({ ...shippingInfo, city: e.target.value })
+                    }
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">ZIP Code</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    ZIP Code
+                  </label>
                   <input
                     type="text"
                     required
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     value={shippingInfo.zipCode}
-                    onChange={(e) => setShippingInfo({...shippingInfo, zipCode: e.target.value})}
+                    onChange={(e) =>
+                      setShippingInfo({
+                        ...shippingInfo,
+                        zipCode: e.target.value,
+                      })
+                    }
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Country</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Country
+                  </label>
                   <select
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     value={shippingInfo.country}
-                    onChange={(e) => setShippingInfo({...shippingInfo, country: e.target.value})}
+                    onChange={(e) =>
+                      setShippingInfo({
+                        ...shippingInfo,
+                        country: e.target.value,
+                      })
+                    }
                   >
                     <option value="US">United States</option>
                     <option value="CA">Canada</option>
@@ -235,8 +303,13 @@ const Checkout = () => {
           )}
 
           {step === 2 && (
-            <form onSubmit={handlePaymentSubmit} className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Payment Information</h2>
+            <form
+              onSubmit={handlePaymentSubmit}
+              className="bg-white rounded-lg shadow-md p-6"
+            >
+              <h2 className="text-xl font-semibold mb-4">
+                Payment Information
+              </h2>
               <div className="mb-4">
                 <label className="flex items-center">
                   <input
@@ -245,54 +318,84 @@ const Checkout = () => {
                     onChange={(e) => setBillingSameAsShipping(e.target.checked)}
                     className="mr-2"
                   />
-                  <span className="text-sm text-gray-700">Billing address same as shipping</span>
+                  <span className="text-sm text-gray-700">
+                    Billing address same as shipping
+                  </span>
                 </label>
               </div>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Cardholder Name</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Cardholder Name
+                  </label>
                   <input
                     type="text"
                     required
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     value={paymentInfo.cardholderName}
-                    onChange={(e) => setPaymentInfo({...paymentInfo, cardholderName: e.target.value})}
+                    onChange={(e) =>
+                      setPaymentInfo({
+                        ...paymentInfo,
+                        cardholderName: e.target.value,
+                      })
+                    }
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Card Number</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Card Number
+                  </label>
                   <input
                     type="text"
                     required
                     placeholder="1234 5678 9012 3456"
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     value={paymentInfo.cardNumber}
-                    onChange={(e) => setPaymentInfo({...paymentInfo, cardNumber: formatCardNumber(e.target.value)})}
+                    onChange={(e) =>
+                      setPaymentInfo({
+                        ...paymentInfo,
+                        cardNumber: formatCardNumber(e.target.value),
+                      })
+                    }
                     maxLength="19"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Expiry Date</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Expiry Date
+                    </label>
                     <input
                       type="text"
                       required
                       placeholder="MM/YY"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       value={paymentInfo.expiryDate}
-                      onChange={(e) => setPaymentInfo({...paymentInfo, expiryDate: formatExpiryDate(e.target.value)})}
+                      onChange={(e) =>
+                        setPaymentInfo({
+                          ...paymentInfo,
+                          expiryDate: formatExpiryDate(e.target.value),
+                        })
+                      }
                       maxLength="5"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">CVV</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      CVV
+                    </label>
                     <input
                       type="text"
                       required
                       placeholder="123"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       value={paymentInfo.cvv}
-                      onChange={(e) => setPaymentInfo({...paymentInfo, cvv: e.target.value.replace(/[^0-9]/g, '')})}
+                      onChange={(e) =>
+                        setPaymentInfo({
+                          ...paymentInfo,
+                          cvv: e.target.value.replace(/[^0-9]/g, ""),
+                        })
+                      }
                       maxLength="4"
                     />
                   </div>
@@ -324,9 +427,12 @@ const Checkout = () => {
                 <div>
                   <h3 className="font-medium mb-2">Shipping Address</h3>
                   <p className="text-sm text-gray-600">
-                    {shippingInfo.firstName} {shippingInfo.lastName}<br />
-                    {shippingInfo.address}<br />
-                    {shippingInfo.city}, {shippingInfo.zipCode}<br />
+                    {shippingInfo.firstName} {shippingInfo.lastName}
+                    <br />
+                    {shippingInfo.address}
+                    <br />
+                    {shippingInfo.city}, {shippingInfo.zipCode}
+                    <br />
                     {shippingInfo.country}
                   </p>
                 </div>
@@ -334,7 +440,8 @@ const Checkout = () => {
                 <div>
                   <h3 className="font-medium mb-2">Payment Method</h3>
                   <p className="text-sm text-gray-600">
-                    **** **** **** {paymentInfo.cardNumber.slice(-4)}<br />
+                    **** **** **** {paymentInfo.cardNumber.slice(-4)}
+                    <br />
                     {paymentInfo.cardholderName}
                   </p>
                 </div>
@@ -359,7 +466,7 @@ const Checkout = () => {
                   disabled={loading}
                   className="flex-1 bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 disabled:opacity-50"
                 >
-                  {loading ? 'Processing...' : 'Place Order'}
+                  {loading ? "Processing..." : "Place Order"}
                 </button>
               </div>
             </div>
@@ -370,14 +477,24 @@ const Checkout = () => {
           <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
 
           <div className="space-y-3 mb-4">
-            {cartItems.map(item => (
+            {cartItems.map((item) => (
               <div key={item.id} className="flex items-center gap-3">
-                <img src={item.image} alt={item.title} className="w-12 h-12 object-contain" />
+                <img
+                  loading="lazy"
+                  decoding="async"
+                  src={item.image}
+                  alt={item.title}
+                  className="w-12 h-12 object-contain"
+                />
                 <div className="flex-1">
-                  <h3 className="text-sm font-medium line-clamp-2">{item.title}</h3>
+                  <h3 className="text-sm font-medium line-clamp-2">
+                    {item.title}
+                  </h3>
                   <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
                 </div>
-                <p className="text-sm font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+                <p className="text-sm font-medium">
+                  ${(item.price * item.quantity).toFixed(2)}
+                </p>
               </div>
             ))}
           </div>
@@ -391,7 +508,7 @@ const Checkout = () => {
             </div>
             <div className="flex justify-between text-sm">
               <span>Shipping</span>
-              <span>{shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}</span>
+              <span>{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span>Tax</span>
@@ -417,7 +534,7 @@ const Checkout = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Checkout
+export default Checkout;
