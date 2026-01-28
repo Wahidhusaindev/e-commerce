@@ -35,12 +35,12 @@ const productSlice = createSlice({
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.status = "success";
-        state.data = action.payload; // Data arrives here
+        state.data = action.payload; 
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
-        state.data = []; // Keeps it an array to prevent .filter errors
+        state.data = []; 
       });
   },
 });

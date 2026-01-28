@@ -29,7 +29,7 @@ const Header = () => {
     return () => clearTimeout(timer);
   }, [query]);
 
-  //Selectors with Fallbacks (Prevents the "filter of undefined" error)
+
   const productItems = useSelector((state) => state.products?.data || []);
   const cartItems = useSelector((state) => state.cart?.items || []);
   const wishlistItems = useSelector((state) => state.wishlist?.data || []);
