@@ -29,11 +29,11 @@ const Electronic = () => {
   const isInWishlist = (id) => wishlistItems.some((item) => item.id === id);
 
   const electronicProducts = useMemo(
-   () => products.filter((p)=>p.category==="electronics"),
-   [products],
+    () => products.filter((p) => p.category === "electronics"),
+    [products],
   );
   return (
-     <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
       {/* Header */}
       <div className="bg-indigo-600 text-white py-12 px-4">
         <div className="max-w-7xl mx-auto">
@@ -64,6 +64,8 @@ const Electronic = () => {
                   <img
                     src={product.image}
                     alt={product.title}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 p-4"
                   />
                   <button
@@ -133,7 +135,9 @@ const Electronic = () => {
 
         {status === "success" && electronicProducts.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">No Electronic products available</p>
+            <p className="text-gray-500 text-lg">
+              No Electronic products available
+            </p>
           </div>
         )}
       </div>

@@ -15,7 +15,7 @@ const Jewelery = () => {
       dispatch(fetchProducts("jewelery"));
     }
   }, [dispatch, status]);
-  
+
   const jeweleryProducts = useMemo(
     () => products.filter((p) => p.category === "jewelery"),
     [products],
@@ -31,8 +31,7 @@ const Jewelery = () => {
 
   const isInCart = (id) => cartItems.some((item) => item.id === id);
   const isInWishlist = (id) => wishlistItems.some((item) => item.id === id);
-  
-  
+
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
       {/* Header */}
@@ -65,6 +64,8 @@ const Jewelery = () => {
                   <img
                     src={product.image}
                     alt={product.title}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 p-4"
                   />
                   <button

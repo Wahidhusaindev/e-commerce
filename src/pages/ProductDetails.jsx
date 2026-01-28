@@ -113,6 +113,8 @@ const ProductDetails = () => {
             <img
               src={product.image}
               alt={product.title}
+              loading="lazy"
+                    decoding="async"
               className="w-full h-96 object-contain"
             />
           </div>
@@ -206,10 +208,11 @@ const ProductDetails = () => {
                   className="bg-white p-4 rounded-xl shadow hover:shadow-xl transition"
                 >
                   <img
-                   loading="eager"
-  fetchpriority="high"
+                   
                     src={item.image}
                     alt={item.title}
+                    loading="lazy"
+                    decoding="async"
                     className="h-40 mx-auto object-contain mb-4"
                   />
                   <h3 className="font-semibold line-clamp-2 mb-2">

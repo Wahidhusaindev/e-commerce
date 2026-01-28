@@ -64,6 +64,8 @@ const Womens = () => {
                   <img
                     src={product.image}
                     alt={product.title}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 p-4"
                   />
                   <button
