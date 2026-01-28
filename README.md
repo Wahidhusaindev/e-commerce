@@ -1,16 +1,52 @@
-# React + Vite
+🛒 SHOPX - Modern E-Commerce Platform
+SHOPX is a high-performance, responsive e-commerce application built by Wahid Husain. Using React and Vite, it provides a seamless shopping experience with real-time search, category filtering, and robust state management.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🔗 Project Links
+Live Demo: https://e-commerce-delta-three-89.vercel.app/
 
-Currently, two official plugins are available:
+GitHub Repository: https://github.com/Wahidhusaindev/e-commerce
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+✨ Key Features
+⚡ Lightning Fast: Powered by Vite for optimized build times and a smooth user experience.
 
-## React Compiler
+🔍 Smart Search with Debouncing: A sophisticated search bar that waits for the user to stop typing (500ms) before filtering, improving performance and UX.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+🛡️ Secure State Management: Built with Redux Toolkit to handle:
 
-## Expanding the ESLint configuration
+Authentication: User login/logout states.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Shopping Cart: Persistent item counts and quantity management.
+
+Wishlist: One-click "favorite" functionality.
+
+📱 Mobile-First Design: Fully responsive navigation with a dedicated mobile menu and search toggle.
+
+🎨 Clean UI: Styled using Tailwind CSS for a modern, professional look.
+
+🛠️ Tech Stack
+Technology Usage React + Vite Core Framework Redux Toolkit State Management (Cart, Wishlist, Auth) Tailwind CSS Utility-first CSS Styling React Router Client-side Routing React Icons Iconography (Feather Icons)
+
+🚀 Installation & Setup
+Clone the repo:
+
+Bash
+git clone https://github.com/Wahidhusaindev/e-commerce.git
+Install dependencies:
+
+Bash
+npm install
+Start the development server:
+
+Bash
+npm run dev
+📁 Project Structure Highlights
+Header.jsx: Features a sticky navigation bar with integrated search logic and dynamic badge notifications for the cart and wishlist.
+
+Redux Slices: Centralized logic for handling product data, user authentication, and shopping preferences.
+
+Responsive Design: Implements a custom mobile menu (FiMenu, FiX) and conditional rendering for mobile search.
+
+👨‍💻 Author
+Wahid Husain * GitHub: @Wahidhusaindev
+
+
