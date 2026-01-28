@@ -30,9 +30,9 @@ const Header = () => {
   }, [query]);
 
   //Selectors with Fallbacks (Prevents the "filter of undefined" error)
-  const productItems = useSelector((state) => state.products?.items || []);
+  const productItems = useSelector((state) => state.products?.data || []);
   const cartItems = useSelector((state) => state.cart?.items || []);
-  const wishlistItems = useSelector((state) => state.wishlist?.items || []);
+  const wishlistItems = useSelector((state) => state.wishlist?.data || []);
   const { isAuthenticated, user } = useSelector((state) => state.auth || {});
 
   // Derived State
@@ -40,14 +40,18 @@ const Header = () => {
   const wishlistCount = wishlistItems.length;
 
   //  Filtering Logic
-  const filteredProducts =
-    debouncedQuery.length > 1
-      ? productItems
-          .filter((product) =>
-            product.title?.toLowerCase().includes(debouncedQuery.toLowerCase()),
-          )
-          .slice(0, 5)
-      : [];
+  console.log("Current Query:", debouncedQuery);
+console.log("Total Items in Redux:", productItems.length);
+
+const filteredProducts = debouncedQuery.length > 1
+  ? productItems.filter((product) => {
+      const title = product.title?.toLowerCase() || "";
+      const query = debouncedQuery.toLowerCase();
+      return title.includes(query);
+    }).slice(0, 5)
+  : [];
+
+console.log("Found matching items:", filteredProducts.length);
 
   const handleLogout = () => {
     dispatch(logoutUser());
